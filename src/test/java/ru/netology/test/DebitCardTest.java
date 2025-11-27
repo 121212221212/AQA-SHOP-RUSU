@@ -1,63 +1,52 @@
 package ru.netology.test;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.Before;
-import org.junit.Test;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.*;
 import ru.netology.data.DataHelper;
 import ru.netology.page.MainPage;
 import ru.netology.page.PaymentPage;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
 
 public class DebitCardTest {
 
+    @BeforeClass
+    public static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterClass
+    public static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+        closeWebDriver();
+    }
+
     @Before
-    public void setup() {
-        Configuration.browser = "chrome";
-        Configuration.headless = false;
-        Configuration.timeout = 10000;
-        Configuration.browserSize = "1280x720";
+    public void setUp() {
+        open("http://localhost:8080");
     }
 
     @Test
-    public void shouldSuccessWithApprovedCard() throws InterruptedException {
-        System.out.println("=== ТЕСТ ДЕБЕТ: ОДОБРЕННАЯ КАРТА (1111 2222 3333 4444) ===");
-
-        MainPage mainPage = open("http://localhost:8080", MainPage.class);
-        Thread.sleep(2000);
-
+    public void shouldSuccessWithApprovedCard() {
+        MainPage mainPage = new MainPage();
         PaymentPage paymentPage = mainPage.goToPaymentPage();
-        Thread.sleep(2000);
 
-        System.out.println("Заполняем одобренную карту: " + DataHelper.getApprovedCard().getNumber());
         paymentPage.fillForm(DataHelper.getApprovedCard());
+        paymentPage.waitForSuccessNotification();
 
-        if (DataHelper.isEmulationMode()) {
-            System.out.println(" ДЕБЕТ: Форма успешно отправлена");
-            System.out.println("Ожидаемый результат: УСПЕШНАЯ ОПЛАТА");
-        }
-
-        Thread.sleep(3000);
+        System.out.println("Debit approved card test - SUCCESS");
     }
 
     @Test
-    public void shouldFailWithDeclinedCard() throws InterruptedException {
-        System.out.println("=== ТЕСТ ДЕБЕТ: ОТКЛОНЕННАЯ КАРТА (5555 6666 7777 8888) ===");
-
-        MainPage mainPage = open("http://localhost:8080", MainPage.class);
-        Thread.sleep(2000);
-
+    public void shouldFailWithDeclinedCard() {
+        MainPage mainPage = new MainPage();
         PaymentPage paymentPage = mainPage.goToPaymentPage();
-        Thread.sleep(2000);
 
-        System.out.println("Заполняем отклоненную карту: " + DataHelper.getDeclinedCard().getNumber());
         paymentPage.fillForm(DataHelper.getDeclinedCard());
+        paymentPage.waitForErrorNotification();
 
-        if (DataHelper.isEmulationMode()) {
-            System.out.println(" ДЕБЕТ: Форма успешно отправлена");
-            System.out.println("Ожидаемый результат: ОТКАЗ В ОПЛАТЕ");
-        }
-
-        Thread.sleep(3000);
+        System.out.println("Debit declined card test - SUCCESS");
     }
 }

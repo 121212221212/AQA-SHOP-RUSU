@@ -2,34 +2,45 @@ package ru.netology.page;
 
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.data.DataHelper;
+import ru.netology.data.DataHelper.CardInfo;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class CreditPage {
-    private SelenideElement cardNumber = $("[placeholder='0000 0000 0000 0000']");
-    private SelenideElement month = $("[placeholder='08']");
-    private SelenideElement year = $("[placeholder='22']");
-    private SelenideElement holder = $("fieldset > div:nth-child(3) input");
-    private SelenideElement cvc = $("[placeholder='999']");
-    private SelenideElement continueButton = $("form button");
-    private SelenideElement successNotification = $(".notification_status_ok");
-    private SelenideElement errorNotification = $(".notification_status_error");
 
-    public void fillForm(DataHelper.CardInfo card) {
-        cardNumber.setValue(card.getNumber());
-        month.setValue(card.getMonth());
-        year.setValue(card.getYear());
-        holder.setValue(card.getHolder());
-        cvc.setValue(card.getCvc());
+    // Селекторы полей формы
+    private SelenideElement cardNumberField = $("[placeholder='0000 0000 0000 0000']");
+    private SelenideElement monthField = $("[placeholder='08']");
+    private SelenideElement yearField = $("[placeholder='22']");
+    private SelenideElement ownerField = $(byText("Владелец")).parent().$("input");
+    private SelenideElement cvcField = $("[placeholder='999']");
+    private SelenideElement continueButton = $(byText("Продолжить"));
+
+    // Уведомления
+    private SelenideElement successNotification = $(byText("Успешно"));
+    private SelenideElement errorNotification = $(byText("Ошибка"));
+    private SelenideElement wrongFormatMessage = $(byText("Неверный формат"));
+
+    public void fillForm(CardInfo card) {
+        cardNumberField.setValue(card.getNumber());
+        monthField.setValue(card.getMonth());
+        yearField.setValue(card.getYear());
+        ownerField.setValue(card.getHolder());
+        cvcField.setValue(card.getCvc());
         continueButton.click();
     }
 
-    public void checkSuccessNotification() {
-        successNotification.shouldBe(visible, text("Успешно"));
+    public void waitForSuccessNotification() {
+        successNotification.shouldBe(visible);
     }
 
-    public void checkErrorNotification() {
-        errorNotification.shouldBe(visible, text("Ошибка"));
+    public void waitForErrorNotification() {
+        errorNotification.shouldBe(visible);
+    }
+
+    public void waitForWrongFormatMessage() {
+        wrongFormatMessage.shouldBe(visible);
     }
 }

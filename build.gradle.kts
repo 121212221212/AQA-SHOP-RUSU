@@ -11,27 +11,33 @@ repositories {
 }
 
 dependencies {
+    // Test frameworks
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.codeborne:selenide:6.17.2")
+
+    // Test data
     testImplementation("com.github.javafaker:javafaker:1.0.2")
+
+    // Lombok
     testImplementation("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
+
+    // Allure
     testImplementation("io.qameta.allure:allure-selenide:2.24.0")
     testImplementation("io.qameta.allure:allure-junit4:2.24.0")
 
-    // Добавим SLF4J чтобы убрать warning в логах
+    // Logging (to remove SLF4J warnings)
     testImplementation("org.slf4j:slf4j-simple:2.0.9")
-
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
 }
 
 tasks.test {
     useJUnit()
 
-    // Настройки для системы (правильный синтаксис для Kotlin)
+    // Settings for visible browser and stability
     systemProperties = mapOf(
         "selenide.headless" to "false",
         "selenide.browser" to "chrome",
-        "selenide.timeout" to "10000"
+        "selenide.timeout" to "15000"
     )
 }
 

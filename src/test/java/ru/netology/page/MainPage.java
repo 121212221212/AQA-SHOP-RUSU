@@ -6,10 +6,9 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
-    // Селектор для "Купить" - по тексту кнопки
-    private SelenideElement buyButton = $(byText("Купить"));
 
-    // Селектор для "Купить в кредит" - по тексту кнопки
+    // Селекторы
+    private SelenideElement buyButton = $(byText("Купить"));
     private SelenideElement creditButton = $(byText("Купить в кредит"));
 
     public PaymentPage goToPaymentPage() {

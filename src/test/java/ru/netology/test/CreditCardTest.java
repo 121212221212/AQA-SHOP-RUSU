@@ -34,9 +34,9 @@ public class CreditCardTest {
         CreditPage creditPage = mainPage.goToCreditPage();
 
         creditPage.fillForm(DataHelper.getApprovedCard());
+        creditPage.waitForSuccessNotification();
 
-        // В режиме эмуляции просто проверяем что форма отправлена
-        System.out.println(" Тест approved карты выполнен успешно");
+        System.out.println("Credit approved card test - SUCCESS");
     }
 
     @Test
@@ -45,8 +45,8 @@ public class CreditCardTest {
         CreditPage creditPage = mainPage.goToCreditPage();
 
         creditPage.fillForm(DataHelper.getDeclinedCard());
+        creditPage.waitForErrorNotification();
 
-        // В режиме эмуляции просто проверяем что форма отправлена
-        System.out.println(" Тест declined карты выполнен успешно");
+        System.out.println("Credit declined card test - SUCCESS");
     }
 }
