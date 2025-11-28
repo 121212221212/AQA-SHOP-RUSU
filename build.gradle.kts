@@ -19,26 +19,41 @@ dependencies {
     testImplementation("com.github.javafaker:javafaker:1.0.2")
 
     // Lombok
-    testImplementation("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
 
     // Allure
     testImplementation("io.qameta.allure:allure-selenide:2.24.0")
     testImplementation("io.qameta.allure:allure-junit4:2.24.0")
 
-    // Logging (to remove SLF4J warnings)
+    // Logging
     testImplementation("org.slf4j:slf4j-simple:2.0.9")
 }
 
 tasks.test {
     useJUnit()
 
-    // Settings for visible browser and stability
     systemProperties = mapOf(
         "selenide.headless" to "false",
         "selenide.browser" to "chrome",
-        "selenide.timeout" to "15000"
+        "selenide.timeout" to "30000",
+        "selenide.pageLoadTimeout" to "60000",
+        "selenide.pollingInterval" to "500",
+        "file.encoding" to "UTF-8"
     )
+
+    jvmArgs = listOf(
+        "-Dfile.encoding=UTF-8",
+        "-Dconsole.encoding=UTF-8"
+    )
+}
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<Test> {
+    systemProperty("file.encoding", "UTF-8")
 }
 
 allure {
