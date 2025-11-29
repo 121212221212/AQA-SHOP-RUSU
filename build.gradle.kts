@@ -28,24 +28,45 @@ dependencies {
 
     // Logging
     testImplementation("org.slf4j:slf4j-simple:2.0.9")
+
+    // DATABASE DRIVERS
+    testImplementation("mysql:mysql-connector-java:8.0.33")
+    testImplementation("org.postgresql:postgresql:42.5.1")
 }
 
 tasks.test {
     useJUnit()
 
+    // УБИРАЕМ ВСЕ ПРЕДУПРЕЖДЕНИЯ И КРАСНЫЙ ТЕКСТ
     systemProperties = mapOf(
         "selenide.headless" to "false",
         "selenide.browser" to "chrome",
         "selenide.timeout" to "30000",
         "selenide.pageLoadTimeout" to "60000",
         "selenide.pollingInterval" to "500",
-        "file.encoding" to "UTF-8"
+        "file.encoding" to "UTF-8",
+        "selenide.silent" to "true",
+        "webdriver.chrome.silentOutput" to "true",
+        "selenide.logger" to "NONE"
     )
 
     jvmArgs = listOf(
         "-Dfile.encoding=UTF-8",
-        "-Dconsole.encoding=UTF-8"
+        "-Dconsole.encoding=UTF-8",
+        "-Dwebdriver.chrome.silentOutput=true",
+        "-Dselenide.silent=true",
+        "-Dselenide.logger=NONE"
     )
+
+    // УБИРАЕМ ЛИШНИЕ ЛОГИ
+    testLogging {
+        showStandardStreams = false
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+        events("passed", "failed", "skipped")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
 }
 
 tasks.withType<JavaCompile> {

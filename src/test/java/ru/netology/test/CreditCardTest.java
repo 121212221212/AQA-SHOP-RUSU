@@ -7,8 +7,7 @@ import ru.netology.data.DataHelper;
 import ru.netology.page.MainPage;
 import ru.netology.page.CreditPage;
 
-import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CreditCardTest {
 
@@ -25,13 +24,8 @@ public class CreditCardTest {
 
     @Before
     public void setUp() {
-        try {
-            open("http://localhost:8080");
-            // Ждем немного для стабильности
-            Thread.sleep(2000);
-        } catch (Exception e) {
-            System.out.println("Страница не загрузилась, продолжаем тест...");
-        }
+        // Просто открываем страницу без сложных проверок
+        open("http://localhost:8080");
     }
 
     @Test
@@ -44,6 +38,7 @@ public class CreditCardTest {
             creditPage.waitForSuccessNotification();
 
             System.out.println("Credit approved card test - SUCCESS");
+
         } catch (Exception e) {
             System.out.println("Тест shouldSuccessPurchaseWithApprovedCard пропущен: " + e.getMessage());
         }
@@ -59,6 +54,7 @@ public class CreditCardTest {
             creditPage.waitForErrorNotification();
 
             System.out.println("Credit declined card test - SUCCESS");
+
         } catch (Exception e) {
             System.out.println("Тест shouldDeclinePurchaseWithDeclinedCard пропущен: " + e.getMessage());
         }

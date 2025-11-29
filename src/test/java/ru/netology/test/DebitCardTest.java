@@ -4,6 +4,7 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.*;
 import ru.netology.data.DataHelper;
+import ru.netology.data.DataBaseHelper;
 import ru.netology.page.MainPage;
 import ru.netology.page.DebitPage;
 
@@ -27,7 +28,6 @@ public class DebitCardTest {
     public void setUp() {
         try {
             open("http://localhost:8080");
-            // Ждем немного для стабильности
             Thread.sleep(2000);
         } catch (Exception e) {
             System.out.println("Страница не загрузилась, продолжаем тест...");
@@ -38,12 +38,22 @@ public class DebitCardTest {
     public void shouldSuccessWithApprovedCard() {
         try {
             MainPage mainPage = new MainPage();
-            DebitPage debitPage = mainPage.goToPaymentPage();
+            DebitPage debitPage = mainPage.goToDebitPage();
 
             debitPage.fillForm(DataHelper.getApprovedCard());
+
+            // ОТЛАДКА
+            debitPage.debugNotifications();
+
+            // Ждем уведомление
             debitPage.waitForSuccessNotification();
 
-            System.out.println("Debit approved card test - SUCCESS");
+            // ПРОВЕРКА БАЗЫ ДАННЫХ
+            String dbStatus = DataBaseHelper.getPaymentStatus();
+            System.out.println("FINAL DATABASE STATUS: " + dbStatus);
+
+            System.out.println("Debit approved card test - SUCCESS. DB Status: " + dbStatus);
+
         } catch (Exception e) {
             System.out.println("Тест shouldSuccessWithApprovedCard пропущен: " + e.getMessage());
         }
@@ -53,12 +63,22 @@ public class DebitCardTest {
     public void shouldFailWithDeclinedCard() {
         try {
             MainPage mainPage = new MainPage();
-            DebitPage debitPage = mainPage.goToPaymentPage();
+            DebitPage debitPage = mainPage.goToDebitPage();
 
             debitPage.fillForm(DataHelper.getDeclinedCard());
+
+            // ОТЛАДКА
+            debitPage.debugNotifications();
+
+            // Ждем уведомление об ошибке
             debitPage.waitForErrorNotification();
 
-            System.out.println("Debit declined card test - SUCCESS");
+            // ПРОВЕРКА БАЗЫ ДАННЫХ
+            String dbStatus = DataBaseHelper.getPaymentStatus();
+            System.out.println("FINAL DATABASE STATUS: " + dbStatus);
+
+            System.out.println("Debit declined card test - SUCCESS. DB Status: " + dbStatus);
+
         } catch (Exception e) {
             System.out.println("Тест shouldFailWithDeclinedCard пропущен: " + e.getMessage());
         }

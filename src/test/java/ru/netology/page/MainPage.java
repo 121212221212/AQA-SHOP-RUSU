@@ -11,7 +11,7 @@ public class MainPage {
     private SelenideElement buyButton = $(byText("Купить"));
     private SelenideElement creditButton = $(byText("Купить в кредит"));
 
-    public DebitPage goToPaymentPage() {
+    public DebitPage goToDebitPage() {
         buyButton.click();
         return new DebitPage();
     }
