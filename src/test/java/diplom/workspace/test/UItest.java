@@ -1,4 +1,4 @@
-package ru.netology.test;
+package diplom.workspace.test;
 
 import org.junit.Test;
 import static com.codeborne.selenide.Condition.visible;
@@ -14,16 +14,16 @@ public class UItest {
             open("http://localhost:8080");
 
             $(byText("Купить")).shouldBe(visible);
-            System.out.println(" Кнопка 'Купить' найдена!");
+            System.out.println("Кнопка 'Купить' найдена");
 
             $(byText("Купить в кредит")).shouldBe(visible);
-            System.out.println(" Кнопка 'Купить в кредит' найдена!");
+            System.out.println(" Кнопка 'Купить в кредит' найдена");
 
             $(byText("Купить")).click();
 
             $(byText("Номер карты")).shouldBe(visible);
             $("[placeholder='0000 0000 0000 0000']").shouldBe(visible);
-            System.out.println(" Поля формы найдены!");
+            System.out.println(" Поля формы найдены");
         } catch (Exception e) {
             System.out.println("Тест shouldFindButtons пропущен: страница не загрузилась");
         }

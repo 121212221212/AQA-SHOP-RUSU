@@ -1,4 +1,4 @@
-package ru.netology.data;
+package diplom.workspace.data;
 
 import lombok.SneakyThrows;
 import org.apache.commons.dbutils.QueryRunner;

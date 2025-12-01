@@ -43,10 +43,10 @@ java -jar aqa-shop.jar
 ### Запуск конкретных тестов:
 ```bash
 # Только тесты дебетовой карты
-./gradlew test --tests "ru.netology.test.DebitCardTest"
+./gradlew test --tests "diplom.workspace.test.DebitCardTest"
 
 # Только тесты кредитной карты  
-./gradlew test --tests "ru.netology.test.CreditCardTest"
+./gradlew test --tests "diplom.workspace.test.CreditCardTest"
 ```
 
 ## Генерация отчетов
@@ -62,22 +62,24 @@ java -jar aqa-shop.jar
 
 ```
 DiplomRusu1/
-├── src/test/java/ru/netology/
-│   ├── test/                    # Тестовые классы
-│   │   ├── DebitCardTest.java   # Тесты дебетовой карты
+└── src/test/java/diplom/workspace/
+│   └── test/                    # Тестовые классы
+│   │   └── DebitCardTest.java   # Тесты дебетовой карты
+│   │   └── UItest.java          # Тест валидации карт
 │   │   └── CreditCardTest.java  # Тесты кредитной карты
-│   ├── page/                    # Page Object классы
-│   │   ├── MainPage.java
-│   │   ├── DebitPage.java
-│   │   └── CreditPage.java
+│   └── page/                    # Page Object классы
+│   │   └── MainPage.java
+│   │   └── DebitPage.java
+│   │   └──
+│   │   └──CreditPage.java
 │   └── data/                    # Вспомогательные классы
-│       ├── DataHelper.java
+│       └── DataHelper.java
 │       └── DataBaseHelper.java
-├── build.gradle.kts             # Конфигурация Gradle
-├── docker-compose.yml           # Конфигурация Docker
-├── Plan.md                      # План автоматизации
-├── Report.md                    # Отчет о тестировании
-├── Summary.md                   # Итоги автоматизации
+└── build.gradle.kts             # Конфигурация Gradle
+└── docker-compose.yml           # Конфигурация Docker
+└── Plan.md                      # План автоматизации
+└── Report.md                    # Отчет о тестировании
+└── Summary.md                   # Итоги автоматизации
 └── aqa-shop.jar                 # Тестируемое приложение
 ```
 

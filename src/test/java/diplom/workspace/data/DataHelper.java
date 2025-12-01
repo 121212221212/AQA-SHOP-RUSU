@@ -1,4 +1,4 @@
-package ru.netology.data;
+package diplom.workspace.data;
 
 import com.github.javafaker.Faker;
 import java.time.LocalDate;
@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class DataHelper {
-    // Ваши тестовые карты
+    // тестовые карты
     private static final String APPROVED_CARD = "1111 2222 3333 4444";  // Карта 1: должна быть одобрена
     private static final String BUGGED_DECLINED_CARD = "5555 6666 7777 8888";  // Карта 2: должна быть отклонена, но показывает успех (баг)
     private static final String RANDOM_ERROR_CARD = "9999 8888 7777 6666";  // Любая другая карта для проверки ошибки

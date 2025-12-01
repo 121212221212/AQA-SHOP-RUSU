@@ -1,13 +1,13 @@
-package ru.netology.page;
+package diplom.workspace.page;
 
 import com.codeborne.selenide.SelenideElement;
-import ru.netology.data.DataHelper.CardInfo;
+import diplom.workspace.data.DataHelper;
 import java.time.Duration;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
-public class DebitPage extends NotificationPage {
+public class CreditPage extends NotificationPage {
     private SelenideElement cardNumberField = $("[placeholder='0000 0000 0000 0000']");
     private SelenideElement monthField = $("[placeholder='08']");
     private SelenideElement yearField = $("[placeholder='22']");
@@ -15,7 +15,7 @@ public class DebitPage extends NotificationPage {
     private SelenideElement cvcField = $("[placeholder='999']");
     private SelenideElement continueButton = $(byText("Продолжить"));
 
-    public void fillForm(CardInfo card) {
+    public void fillForm(DataHelper.CardInfo card) {
         cardNumberField.setValue(card.getNumber());
         monthField.setValue(card.getMonth());
         yearField.setValue(card.getYear());

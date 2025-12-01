@@ -1,4 +1,4 @@
-package ru.netology.page;
+package diplom.workspace.page;
 
 import com.codeborne.selenide.SelenideElement;
 import java.time.Duration;
@@ -37,7 +37,7 @@ public class NotificationPage {
         } else {
             for (int i = 0; i < $$(".notification").size(); i++) {
                 SelenideElement notification = $$(".notification").get(i);
-                System.out.println("\nУведомление #" + (i + 1) + ":");
+                System.out.println("  Уведомление #" + (i + 1) + ":");
                 System.out.println("  Классы: " + notification.getAttribute("class"));
                 System.out.println("  Видимое: " + notification.isDisplayed());
 
