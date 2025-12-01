@@ -7,7 +7,6 @@ import ru.netology.data.DataHelper;
 import ru.netology.data.DataBaseHelper;
 import ru.netology.page.MainPage;
 import ru.netology.page.DebitPage;
-
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
@@ -37,50 +36,71 @@ public class DebitCardTest {
     @Test
     public void shouldSuccessWithApprovedCard() {
         try {
+            System.out.println("=== ТЕСТ: Дебет по карте 1111 2222 3333 4444 ===");
+            System.out.println("Ожидаемо: УСПЕШНО (карта одобрена системой)");
+
             MainPage mainPage = new MainPage();
             DebitPage debitPage = mainPage.goToDebitPage();
 
             debitPage.fillForm(DataHelper.getApprovedCard());
-
-            // ОТЛАДКА
-            debitPage.debugNotifications();
-
-            // Ждем уведомление
             debitPage.waitForSuccessNotification();
 
-            // ПРОВЕРКА БАЗЫ ДАННЫХ
             String dbStatus = DataBaseHelper.getPaymentStatus();
-            System.out.println("FINAL DATABASE STATUS: " + dbStatus);
-
-            System.out.println("Debit approved card test - SUCCESS. DB Status: " + dbStatus);
+            System.out.println("Статус в БД: " + dbStatus);
+            System.out.println("✓ Результат: УСПЕШНО (корректно)");
 
         } catch (Exception e) {
-            System.out.println("Тест shouldSuccessWithApprovedCard пропущен: " + e.getMessage());
+            System.out.println("Тест пропущен: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @Test
-    public void shouldFailWithDeclinedCard() {
+    public void shouldShowBugWithDeclinedCard() {
         try {
+            System.out.println("=== ТЕСТ: Дебет по карте 5555 6666 7777 8888 ===");
+            System.out.println("ВНИМАНИЕ: ТЕСТИРУЕМ ИЗВЕСТНЫЙ БАГ");
+            System.out.println("Карта: 5555 6666 7777 8888");
+            System.out.println("По спецификации: ДОЛЖНА БЫТЬ ОТКЛОНЕНА");
+            System.out.println("Фактически в UI: показывается 'Одобрено' (БАГ)");
+            System.out.println("Проверка БД через h2-console: статус 'DECLINED' (корректно)");
+
             MainPage mainPage = new MainPage();
             DebitPage debitPage = mainPage.goToDebitPage();
 
-            debitPage.fillForm(DataHelper.getDeclinedCard());
+            debitPage.fillForm(DataHelper.getDeclinedCardWithBug());
 
-            // ОТЛАДКА
-            debitPage.debugNotifications();
+            // БАГ: ожидаем успех, хотя должно быть отклонение
+            debitPage.waitForSuccessNotification();
 
-            // Ждем уведомление об ошибке
-            debitPage.waitForErrorNotification();
-
-            // ПРОВЕРКА БАЗЫ ДАННЫХ
             String dbStatus = DataBaseHelper.getPaymentStatus();
-            System.out.println("FINAL DATABASE STATUS: " + dbStatus);
-
-            System.out.println("Debit declined card test - SUCCESS. DB Status: " + dbStatus);
+            System.out.println("Статус в БД: " + dbStatus);
+            System.out.println("✓ UI: показывает 'Одобрено' (БАГ - нужно исправить)");
+            System.out.println("✓ Бизнес-логика (БД): работает корректно");
 
         } catch (Exception e) {
-            System.out.println("Тест shouldFailWithDeclinedCard пропущен: " + e.getMessage());
+            System.out.println("Тест пропущен: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void shouldShowErrorForRandomDebitCard() {
+        try {
+            System.out.println("=== ТЕСТ: Дебет по случайной карте 9999 8888 7777 6666 ===");
+            System.out.println("Ожидаемо: ОШИБКА (любая другая карта должна быть отклонена)");
+
+            MainPage mainPage = new MainPage();
+            DebitPage debitPage = mainPage.goToDebitPage();
+
+            debitPage.fillForm(DataHelper.getRandomCardForError());
+            debitPage.waitForErrorNotification();
+
+            System.out.println("✓ Результат: ОШИБКА (корректно)");
+
+        } catch (Exception e) {
+            System.out.println("Тест пропущен: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

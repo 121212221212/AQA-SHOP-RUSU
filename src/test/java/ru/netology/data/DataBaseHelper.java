@@ -1,40 +1,44 @@
 package ru.netology.data;
 
-import java.sql.*;
+import lombok.SneakyThrows;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DataBaseHelper {
+    private static final QueryRunner runner = new QueryRunner();
 
-    public static String getPaymentStatus() {
-        String status = "NOT_FOUND";
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/app", "root", "password");
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1")) {
-
-            if (rs.next()) {
-                status = rs.getString("status");
-                System.out.println("PAYMENT STATUS FROM DB: " + status);
-            }
-        } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
-        }
-        return status;
+    private static Connection getConn() throws SQLException {
+        return DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/app", "app", "pass"
+        );
     }
 
-    public static String getCreditStatus() {
-        String status = "NOT_FOUND";
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/app", "root", "password");
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1")) {
-
-            if (rs.next()) {
-                status = rs.getString("status");
-                System.out.println("CREDIT STATUS FROM DB: " + status);
-            }
-        } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
+    @SneakyThrows
+    public static String getPaymentStatus() {
+        var statusSQL = "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1";
+        try (var conn = getConn()) {
+            return runner.query(conn, statusSQL, new ScalarHandler<>());
         }
-        return status;
+    }
+
+    @SneakyThrows
+    public static String getCreditRequestStatus() {
+        var statusSQL = "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1";
+        try (var conn = getConn()) {
+            return runner.query(conn, statusSQL, new ScalarHandler<>());
+        }
+    }
+
+    @SneakyThrows
+    public static void cleanDatabase() {
+        try (var conn = getConn()) {
+            runner.execute(conn, "DELETE FROM credit_request_entity");
+            runner.execute(conn, "DELETE FROM order_entity");
+            runner.execute(conn, "DELETE FROM payment_entity");
+        }
     }
 }

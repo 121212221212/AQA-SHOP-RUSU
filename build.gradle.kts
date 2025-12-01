@@ -24,14 +24,10 @@ dependencies {
 
     // Allure
     testImplementation("io.qameta.allure:allure-selenide:2.24.0")
-    testImplementation("io.qameta.allure:allure-junit4:2.24.0")
 
-    // Logging
-    testImplementation("org.slf4j:slf4j-simple:2.0.9")
-
-    // DATABASE DRIVERS
+    // Database (нужен только MySQL для проверки статусов в БД)
     testImplementation("mysql:mysql-connector-java:8.0.33")
-    testImplementation("org.postgresql:postgresql:42.5.1")
+    testImplementation("commons-dbutils:commons-dbutils:1.7") // для работы с БД
 }
 
 tasks.test {
